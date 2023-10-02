@@ -4,7 +4,7 @@ library(magrittr)
 library(cmdstanr)
 library(posterior)
 library(bayesplot)
-library(tidybayes) # didn't use
+library(tidybayes) 
 library(here)
 library(ThemePark)
 library(ggtext)
@@ -71,16 +71,10 @@ ratio_rvar <- as_draws_rvars(fit$draws("sample_ratio"))
 ratio_rvar %>%
   spread_draws(sample_ratio[j]) %>%
   filter(j %in% sample_rows) %>%
-  #ggplot(aes(y = as.factor(j), x = sample_size)) +
   ggplot(aes(y = reorder(as.factor(j), desc(sample_ratio)), x = sample_ratio)) +
-  #stat_halfeye() +
-  #stat_interval(.width = c(.50, .80, .95),
-  #              show.legend = FALSE) +
   stat_pointinterval(.width = c(.50, .80, .95),
                      show.legend = FALSE,
                      colour = barbie_theme_colors[7]) +
-  #scale_fill_brewer(palette = "RdPu",
-  #                   name = NULL) +
   scale_y_discrete(labels = NULL) +
   labs(title = "Ratio of effective to reported sample size",
        subtitle = "One hundred randomly chosen polls",
@@ -116,7 +110,6 @@ ratio_rvar %>%
         legend.position = "top",
         legend.direction = "horizontal",
         plot.subtitle = element_markdown(),
-        #plot.title = element_markdown(),
         plot.background = element_rect(fill = barbie_theme_colors["panel"]),
         axis.ticks.y = element_blank())
   
@@ -124,16 +117,11 @@ ratio_rvar %>%
 sigma_rvar <- as_draws_rvars(fit$draws("sigma"))
 sigma_rvar %>%
   spread_draws(sigma[j]) %>%
-  #filter(j %in% sample_rows) %>%
-  #ggplot(aes(y = as.factor(j), x = sample_size)) +
-  #ggplot(aes(y = reorder(as.factor(j), desc(sigma)), x = sigma)) +
   ggplot(aes(y = j, x = sigma)) +
   stat_pointinterval(.width = c(.50, .80, .95),
                      show.legend = FALSE,
                      colour = barbie_theme_colors[7]) +
   geom_point(aes(x = y_moe, y = 1:457), data = data.frame(y_moe = y_moe)) +
-  #scale_fill_brewer(palette = "RdPu",
-  #                   name = NULL) +
   scale_y_discrete(labels = NULL) +
   labs(title = "Ratio of effective to reported sample size",
        subtitle = "One hundred randomly chosen polls",
@@ -156,16 +144,10 @@ sigma_rvar %>%
 sigma_pollster_rvar <- as_draws_rvars(fit$draws("sigma_pollster"))
 sigma_pollster_rvar %>%
   spread_draws(sigma_pollster[j]) %>%
-  #ggplot(aes(y = as.factor(j), x = sample_size)) +
   ggplot(aes(y = reorder(as.factor(j), desc(sigma_pollster)), x = sigma_pollster)) +
-  #stat_halfeye() +
-  #stat_interval(.width = c(.50, .80, .95),
-  #              show.legend = FALSE) +
   stat_pointinterval(.width = c(.50, .80, .95),
                      show.legend = FALSE,
                      colour = barbie_theme_colors[7]) +
-  #scale_fill_brewer(palette = "RdPu",
-  #                   name = NULL) +
   scale_y_discrete(labels = pollster_map,
                    breaks = 1:N_pollsters) +
   labs(title = "Sigma pollster",
